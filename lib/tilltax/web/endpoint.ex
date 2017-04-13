@@ -36,6 +36,9 @@ defmodule TillTax.Web.Endpoint do
     key: "_tilltax_key",
     signing_salt: "OruhAY/S"
 
+  # CORS plug for API
+  plug CORSPlug
+
   plug TillTax.Web.Router
 
   @doc """
