@@ -7,7 +7,6 @@ defmodule TillTax.Mixfile do
      elixir: "~> 1.4",
      elixirc_paths: elixirc_paths(Mix.env),
      compilers: [:phoenix, :gettext] ++ Mix.compilers,
-     build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      aliases: aliases(),
      deps: deps()]
@@ -18,7 +17,7 @@ defmodule TillTax.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {TillTax.Application, []},
-     extra_applications: [:logger]]
+     extra_applications: [:logger, :runtime_tools]]
   end
 
   # Specifies which paths to compile per environment.
