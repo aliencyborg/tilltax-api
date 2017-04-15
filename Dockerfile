@@ -12,6 +12,7 @@ ADD . /code
 
 RUN \
   mix local.hex --force && \
+  mix local.rebar --force && \
   mix deps.get --only-prod && \
   mix compile
 
