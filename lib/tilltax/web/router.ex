@@ -5,7 +5,7 @@ defmodule TillTax.Web.Router do
     plug :accepts, ["json", "json-api"]
   end
 
-  scope "/api", TillTax.Web do
+  scope "/", TillTax.Web do
     pipe_through :api
     resources "/session", SessionController, only: [:index]
   end
