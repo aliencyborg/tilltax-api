@@ -17,7 +17,7 @@ defmodule TillTax.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {TillTax.Application, []},
-     extra_applications: [:logger, :runtime_tools]]
+     extra_applications: [:logger, :runtime_tools, :comeonin]]
   end
 
   # Specifies which paths to compile per environment.
@@ -35,7 +35,8 @@ defmodule TillTax.Mixfile do
      {:gettext, "~> 0.11"},
      {:cowboy, "~> 1.0"},
      {:cors_plug, "~> 1.2"},
-     {:guardian, "~> 0.14"}]
+     {:guardian, "~> 0.14"},
+     {:comeonin, "~> 3.0"}]
   end
 
   # Aliases are shortcuts or tasks specific to the current project.

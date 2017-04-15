@@ -8,5 +8,6 @@ defmodule TillTax.Web.Router do
   scope "/", TillTax.Web do
     pipe_through :api
     resources "/session", SessionController, only: [:index]
+    resources "/users", UserController, except: [:new, :edit]
   end
 end

@@ -17,3 +17,6 @@ config :tilltax, TillTax.Repo,
   database: "tilltax_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
+
+# Reduce the BCrypt rounds for speed
+config :comeonin, :bcrypt_log_rounds, 4
