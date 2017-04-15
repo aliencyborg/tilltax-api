@@ -22,10 +22,10 @@ config :tilltax, TillTax.Web.Endpoint,
 # Configure your database
 config :tilltax, TillTax.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: System.get_env("DB_USERNAME"),
-  password: System.get_env("DB_PASSWORD"),
-  database: System.get_env("DB_NAME"),
-  hostname: System.get_env("DB_HOST"),
+  username: System.get_env("POSTGRES_USER"),
+  password: System.get_env("POSTGRES_PASSWORD"),
+  database: System.get_env("POSTGRES_DB"),
+  hostname: System.get_env("POSTGRES_HOST"),
   pool_size: 15
 
 # Do not print debug messages in production
