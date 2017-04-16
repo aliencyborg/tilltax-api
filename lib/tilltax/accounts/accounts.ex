@@ -6,107 +6,7 @@ defmodule TillTax.Accounts do
   import Ecto.{Query, Changeset}, warn: false
   alias TillTax.Repo
 
-  alias TillTax.Accounts.Session
-
-  @doc """
-  Returns the list of sessions.
-
-  ## Examples
-
-      iex> list_sessions()
-      [%Session{}, ...]
-
-  """
-  def list_sessions do
-    Repo.all(Session)
-  end
-
-  @doc """
-  Gets a single session.
-
-  Raises `Ecto.NoResultsError` if the Session does not exist.
-
-  ## Examples
-
-      iex> get_session!(123)
-      %Session{}
-
-      iex> get_session!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_session!(id), do: Repo.get!(Session, id)
-
-  @doc """
-  Creates a session.
-
-  ## Examples
-
-      iex> create_session(%{field: value})
-      {:ok, %Session{}}
-
-      iex> create_session(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_session(attrs \\ %{}) do
-    %Session{}
-    |> session_changeset(attrs)
-    |> Repo.insert()
-  end
-
-  @doc """
-  Updates a session.
-
-  ## Examples
-
-      iex> update_session(session, %{field: new_value})
-      {:ok, %Session{}}
-
-      iex> update_session(session, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_session(%Session{} = session, attrs) do
-    session
-    |> session_changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
-  Deletes a Session.
-
-  ## Examples
-
-      iex> delete_session(session)
-      {:ok, %Session{}}
-
-      iex> delete_session(session)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_session(%Session{} = session) do
-    Repo.delete(session)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking session changes.
-
-  ## Examples
-
-      iex> change_session(session)
-      %Ecto.Changeset{source: %Session{}}
-
-  """
-  def change_session(%Session{} = session) do
-    session_changeset(session, %{})
-  end
-
-  defp session_changeset(%Session{} = session, attrs) do
-    session
-    |> cast(attrs, [])
-    |> validate_required([])
-  end
+  # alias TillTax.Accounts.Session
 
   alias TillTax.Accounts.User
 
@@ -206,7 +106,20 @@ defmodule TillTax.Accounts do
 
   defp user_changeset(%User{} = user, attrs) do
     user
-    |> cast(attrs, [:email, :password_hash])
-    |> validate_required([:email, :password_hash])
+    |> cast(attrs, [:email, :password, :password_confirmation])
+    |> validate_required([:email, :password, :password_confirmation])
+    |> validate_format(:email, ~r/@/)
+    |> validate_length(:password, min: 8)
+    |> validate_confirmation(:password)
+    |> hash_password
+    |> unique_constraint(:email)
+  end
+
+  defp hash_password(%{valid?: false} = changeset), do: changeset
+  defp hash_password(%{valid?: true} = changeset) do
+    hashedpw = Comeonin.Bcrypt.hashpwsalt(
+      Ecto.Changeset.get_field(changeset, :password)
+    )
+    Ecto.Changeset.put_change(changeset, :password_hash, hashedpw)
   end
 end

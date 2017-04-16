@@ -4,9 +4,17 @@ defmodule TillTax.Web.UserControllerTest do
   alias TillTax.Accounts
   alias TillTax.Accounts.User
 
-  @create_attrs %{email: "some email", password_hash: "some password_hash"}
-  @update_attrs %{email: "some updated email", password_hash: "some updated password_hash"}
-  @invalid_attrs %{email: nil, password_hash: nil}
+  @create_attrs %{
+    email: "some@email",
+    password: "some-password",
+    password_confirmation: "some-password"
+  }
+  @update_attrs %{
+    email: "some.updated@email",
+    password: "some-updated-password",
+    password_confirmation: "some-updated-password"
+  }
+  @invalid_attrs %{email: nil, password: nil}
 
   def fixture(:user) do
     {:ok, user} = Accounts.create_user(@create_attrs)
@@ -29,8 +37,7 @@ defmodule TillTax.Web.UserControllerTest do
     conn = get conn, user_path(conn, :show, id)
     assert json_response(conn, 200)["data"] == %{
       "id" => id,
-      "email" => "some email",
-      "password_hash" => "some password_hash"}
+      "email" => "some@email"}
   end
 
   test "does not create user and renders errors when data is invalid", %{conn: conn} do
@@ -46,8 +53,7 @@ defmodule TillTax.Web.UserControllerTest do
     conn = get conn, user_path(conn, :show, id)
     assert json_response(conn, 200)["data"] == %{
       "id" => id,
-      "email" => "some updated email",
-      "password_hash" => "some updated password_hash"}
+      "email" => "some.updated@email"}
   end
 
   test "does not update chosen user and renders errors when data is invalid", %{conn: conn} do

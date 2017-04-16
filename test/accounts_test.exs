@@ -1,56 +1,71 @@
+require IEx;
+
 defmodule TillTax.AccountsTest do
   use TillTax.DataCase
 
   alias TillTax.Accounts
-  alias TillTax.Accounts.Session
+  alias TillTax.Accounts.User
 
-  @create_attrs %{}
-  @update_attrs %{}
-  @invalid_attrs %{}
+  @create_attrs %{
+    email: "some@email",
+    password: "some-password",
+    password_confirmation: "some-password"
+  }
+  @update_attrs %{
+    email: "some.updated@email",
+    password: "some-updated-password",
+    password_confirmation: "some-updated-password"
+  }
+  @invalid_attrs %{email: nil, password: nil}
 
-  def fixture(:session, attrs \\ @create_attrs) do
-    {:ok, session} = Accounts.create_session(attrs)
-    session
+  def fixture(:user, attrs \\ @create_attrs) do
+    {:ok, user} = Accounts.create_user(attrs)
+    user
   end
 
-  test "list_sessions/1 returns all sessions" do
-    session = fixture(:session)
-    assert Accounts.list_sessions() == [session]
+  def fixture_without_password(:user) do
+    user = fixture(:user)
+    %{user | password: nil, password_confirmation: nil}
   end
 
-  test "get_session! returns the session with given id" do
-    session = fixture(:session)
-    assert Accounts.get_session!(session.id) == session
+  test "list_users/1 returns all users" do
+    user = fixture_without_password(:user)
+    assert Accounts.list_users() == [user]
   end
 
-  test "create_session/1 with valid data creates a session" do
-    assert {:ok, %Session{} = session} = Accounts.create_session(@create_attrs)
+  test "get_user! returns the user with given id" do
+    user = fixture_without_password(:user)
+    assert Accounts.get_user!(user.id) == user
   end
 
-  test "create_session/1 with invalid data returns error changeset" do
-    assert {:error, %Ecto.Changeset{}} = Accounts.create_session(@invalid_attrs)
+  test "create_user/1 with valid data creates a user" do
+    assert {:ok, %User{} = user} = Accounts.create_user(@create_attrs)
   end
 
-  test "update_session/2 with valid data updates the session" do
-    session = fixture(:session)
-    assert {:ok, session} = Accounts.update_session(session, @update_attrs)
-    assert %Session{} = session
+  test "create_user/1 with invalid data returns error changeset" do
+    assert {:error, %Ecto.Changeset{}} = Accounts.create_user(@invalid_attrs)
   end
 
-  test "update_session/2 with invalid data returns error changeset" do
-    session = fixture(:session)
-    assert {:error, %Ecto.Changeset{}} = Accounts.update_session(session, @invalid_attrs)
-    assert session == Accounts.get_session!(session.id)
+  test "update_user/2 with valid data updates the user" do
+    user = fixture(:user)
+    assert {:ok, user} = Accounts.update_user(user, @update_attrs)
+    assert %User{} = user
   end
 
-  test "delete_session/1 deletes the session" do
-    session = fixture(:session)
-    assert {:ok, %Session{}} = Accounts.delete_session(session)
-    assert_raise Ecto.NoResultsError, fn -> Accounts.get_session!(session.id) end
+  test "update_user/2 with invalid data returns error changeset" do
+    user = fixture_without_password(:user)
+    assert {:error, %Ecto.Changeset{}} = Accounts.update_user(user, @invalid_attrs)
+    assert user == Accounts.get_user!(user.id)
   end
 
-  test "change_session/1 returns a session changeset" do
-    session = fixture(:session)
-    assert %Ecto.Changeset{} = Accounts.change_session(session)
+  test "delete_user/1 deletes the user" do
+    user = fixture(:user)
+    assert {:ok, %User{}} = Accounts.delete_user(user)
+    assert_raise Ecto.NoResultsError, fn -> Accounts.get_user!(user.id) end
+  end
+
+  test "change_user/1 returns a user changeset" do
+    user = fixture(:user)
+    assert %Ecto.Changeset{} = Accounts.change_user(user)
   end
 end
