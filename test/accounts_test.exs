@@ -16,7 +16,6 @@ defmodule TillTax.AccountsTest do
     password: "some-updated-password",
     password_confirmation: "some-updated-password"
   }
-  @invalid_attrs %{email: nil, password: nil}
 
   def fixture(:user, attrs \\ @create_attrs) do
     {:ok, user} = Accounts.create_user(attrs)
@@ -39,11 +38,31 @@ defmodule TillTax.AccountsTest do
   end
 
   test "create_user/1 with valid data creates a user" do
-    assert {:ok, %User{} = user} = Accounts.create_user(@create_attrs)
+    assert {:ok, %User{}} = Accounts.create_user(@create_attrs)
   end
 
   test "create_user/1 with invalid data returns error changeset" do
-    assert {:error, %Ecto.Changeset{}} = Accounts.create_user(@invalid_attrs)
+    attrs = %{email: nil, password: nil}
+    assert {:error, %Ecto.Changeset{}} = Accounts.create_user(attrs)
+  end
+
+  test "create_user/1 with mis-matched passwords returns error changeset" do
+    attrs = %{@create_attrs | password_confirmation: 'oopsy-doopsy'}
+    assert {:error, %Ecto.Changeset{}} = Accounts.create_user(attrs)
+  end
+
+  test "create_user/1 with no password_confirmation returns error changeset" do
+    attrs = %{@create_attrs | password_confirmation: nil}
+    assert {:error, %Ecto.Changeset{}} = Accounts.create_user(attrs)
+  end
+
+  test "create_user/1 with short password returns error changeset" do
+    attrs = %{
+      email: "some@email",
+      password: "shorty",
+      password_confirmation: "shorty"
+    }
+    assert {:error, %Ecto.Changeset{}} = Accounts.create_user(attrs)
   end
 
   test "update_user/2 with valid data updates the user" do
@@ -54,7 +73,8 @@ defmodule TillTax.AccountsTest do
 
   test "update_user/2 with invalid data returns error changeset" do
     user = fixture_without_password(:user)
-    assert {:error, %Ecto.Changeset{}} = Accounts.update_user(user, @invalid_attrs)
+    assert {:error, %Ecto.Changeset{}} =
+      Accounts.update_user(user, %{email: 'derp'})
     assert user == Accounts.get_user!(user.id)
   end
 
