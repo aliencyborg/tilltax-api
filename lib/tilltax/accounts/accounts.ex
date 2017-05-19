@@ -4,10 +4,8 @@ defmodule TillTax.Accounts do
   """
 
   import Ecto.{Query, Changeset}, warn: false
+
   alias TillTax.Repo
-
-  # alias TillTax.Accounts.Session
-
   alias TillTax.Accounts.User
 
   @doc """
@@ -53,7 +51,7 @@ defmodule TillTax.Accounts do
   """
   def create_user(attrs \\ %{}) do
     %User{}
-    |> user_changeset(attrs)
+    |> User.changeset(attrs)
     |> Repo.insert()
   end
 
@@ -71,7 +69,7 @@ defmodule TillTax.Accounts do
   """
   def update_user(%User{} = user, attrs) do
     user
-    |> user_changeset(attrs)
+    |> User.changeset(attrs)
     |> Repo.update()
   end
 
@@ -101,25 +99,6 @@ defmodule TillTax.Accounts do
 
   """
   def change_user(%User{} = user) do
-    user_changeset(user, %{})
-  end
-
-  defp user_changeset(%User{} = user, attrs) do
-    user
-    |> cast(attrs, [:email, :password, :password_confirmation])
-    |> validate_required([:email, :password, :password_confirmation])
-    |> validate_format(:email, ~r/@/)
-    |> validate_length(:password, min: 8)
-    |> validate_confirmation(:password)
-    |> hash_password
-    |> unique_constraint(:email)
-  end
-
-  defp hash_password(%{valid?: false} = changeset), do: changeset
-  defp hash_password(%{valid?: true} = changeset) do
-    hashedpw = Comeonin.Bcrypt.hashpwsalt(
-      Ecto.Changeset.get_field(changeset, :password)
-    )
-    Ecto.Changeset.put_change(changeset, :password_hash, hashedpw)
+    User.changeset(user, %{})
   end
 end
