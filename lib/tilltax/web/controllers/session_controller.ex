@@ -3,7 +3,8 @@ defmodule TillTax.Web.SessionController do
 
   import Ecto.Query, only: [where: 2]
   import Comeonin.Bcrypt
-  import Logger
+
+  require Logger
 
   alias TillTax.Repo
   alias TillTax.Accounts.User

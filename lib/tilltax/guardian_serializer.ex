@@ -1,5 +1,5 @@
 defmodule TillTax.GuardianSerializer do
-  @behavior Guardian.Serializer
+  @behaviour Guardian.Serializer
 
   alias TillTax.Repo
   alias TillTax.Accounts.User
