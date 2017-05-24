@@ -11,6 +11,12 @@ defmodule TillTax.Web.UserView do
   end
 
   def render("user.json", %{user: user}) do
-    %{id: user.id, email: user.email}
+    %{
+      type: "user",
+      id: user.id,
+      attributes: %{
+        email: user.email
+      }
+    }
   end
 end

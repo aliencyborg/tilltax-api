@@ -37,7 +37,11 @@ defmodule TillTax.Web.UserControllerTest do
     conn = get conn, user_path(conn, :show, id)
     assert json_response(conn, 200)["data"] == %{
       "id" => id,
-      "email" => "some@email"}
+      "type" => "user",
+      "attributes" => %{
+        "email" => "some@email"
+      }
+    }
   end
 
   test "does not create user and renders errors when data is invalid", %{conn: conn} do
@@ -53,7 +57,11 @@ defmodule TillTax.Web.UserControllerTest do
     conn = get conn, user_path(conn, :show, id)
     assert json_response(conn, 200)["data"] == %{
       "id" => id,
-      "email" => "some.updated@email"}
+      "type" => "user",
+      "attributes" => %{
+        "email" => "some.updated@email"
+      }
+    }
   end
 
   test "does not update chosen user and renders errors when data is invalid", %{conn: conn} do
