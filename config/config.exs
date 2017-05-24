@@ -33,12 +33,12 @@ config :mime, :types, %{
 
 # Configure Guardian authentication
 config :guardian, Guardian,
-  issuer: "Tilltax",
+  issuer: "TillTax",
   ttl: { 30, :days },
   verify_issuer: true,
   secret_key: System.get_env("GUARDIAN_SECRET")
   || "qjV/rWCBwR2J68I3cnt174/4eyf+ncHcy3E99iPXSAwS2l8M+m2bPjFxBGeImgbV",
-  serializer: Tilltax.GuardianSerializer
+  serializer: TillTax.GuardianSerializer
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

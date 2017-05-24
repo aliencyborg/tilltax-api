@@ -9,8 +9,8 @@ defmodule TillTax.Web.Router do
     pipe_through :api
 
     post "/register", RegistrationController, :create
+    post "/token", SessionController, :create, as: :login
 
-    resources "/session", SessionController, only: [:index]
     resources "/users", UserController, except: [:new, :edit]
   end
 end
