@@ -4,7 +4,7 @@ defmodule TillTax.Web.RegistrationControllerTest do
   alias TillTax.Repo
   alias TillTax.Accounts.User
 
-  @valid_attrs %{
+  @create_attrs %{
     email: "some@email",
     password: "some-password",
     password_confirmation: "some-password"
@@ -23,12 +23,12 @@ defmodule TillTax.Web.RegistrationControllerTest do
     conn = post conn, registration_path(conn, :create), %{
       data: %{
         type: "user",
-        attributes: @valid_attrs
+        attributes: @create_attrs
       }
     }
 
     assert json_response(conn, 201)["data"]["id"]
-    assert Repo.get_by(User, %{email: @valid_attrs[:email]})
+    assert Repo.get_by(User, %{email: @create_attrs[:email]})
   end
 
   test "does not create user and renders errors when data is invalid", %{conn: conn} do
