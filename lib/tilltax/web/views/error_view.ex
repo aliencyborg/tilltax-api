@@ -1,12 +1,25 @@
 defmodule TillTax.Web.ErrorView do
   use TillTax.Web, :view
+  use JaSerializer.PhoenixView
+
+  def render("400.json", _assigns) do
+    %{title: "Bad Request", code: 400}
+    |> JaSerializer.ErrorSerializer.format
+  end
+
+  def render("401.json", _assigns) do
+    %{title: "Unauthorized", code: 401}
+    |> JaSerializer.ErrorSerializer.format
+  end
 
   def render("404.json", _assigns) do
-    %{errors: %{detail: "Page not found"}}
+    %{title: "Page not found", code: 404}
+    |> JaSerializer.ErrorSerializer.format
   end
 
   def render("500.json", _assigns) do
-    %{errors: %{detail: "Internal server error"}}
+    %{title: "Internal server error", code: 500}
+    |> JaSerializer.ErrorSerializer.format
   end
 
   # In case no render clause matches or no
