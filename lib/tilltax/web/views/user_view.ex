@@ -15,6 +15,7 @@ defmodule TillTax.Web.UserView do
       type: "user",
       id: user.id,
       attributes: %{
+        admin: user.admin,
         email: user.email
       }
     }

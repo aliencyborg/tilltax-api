@@ -3,8 +3,10 @@ defmodule TillTax.Repo.Migrations.CreateTillTax.Accounts.User do
 
   def change do
     create table(:accounts_users) do
+      add :admin, :boolean
       add :email, :string
       add :password_hash, :string
+      add :phone, :string
 
       timestamps()
     end

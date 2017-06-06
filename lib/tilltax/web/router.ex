@@ -16,6 +16,7 @@ defmodule TillTax.Web.Router do
   scope "/", TillTax.Web do
     pipe_through :api
 
+    post "/contact", ContactController, :create
     post "/register", RegistrationController, :create
     post "/token", SessionController, :create, as: :login
   end
@@ -24,6 +25,8 @@ defmodule TillTax.Web.Router do
     pipe_through :api_auth
 
     get "/user/current", UserController, :current
-    resources "user", UserController, only: [:show, :index]
+
+    resources "/contact", ContactController, except: [:new, :edit]
+    resources "/user", UserController, except: [:new, :edit]
   end
 end

@@ -5,6 +5,7 @@ defmodule TillTax.Accounts.User do
 
 
   schema "accounts_users" do
+    field :admin, :boolean
     field :email, :string
     field :password_hash, :string
     field :password, :string, virtual: true
@@ -16,7 +17,7 @@ defmodule TillTax.Accounts.User do
   @doc false
   def changeset(%User{} = user, attrs) do
     user
-    |> cast(attrs, [:email, :password, :password_confirmation])
+    |> cast(attrs, [:admin, :email, :password, :password_confirmation])
     |> validate_required([:email, :password, :password_confirmation])
     |> validate_format(:email, ~r/@/)
     |> validate_length(:password, min: 8)

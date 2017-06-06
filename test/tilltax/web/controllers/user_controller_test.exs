@@ -4,9 +4,10 @@ defmodule TillTax.Web.UserControllerTest do
   alias TillTax.Accounts.User
   alias TillTax.Repo
 
-  defp insert_user do
+  defp insert_admin do
     %User{
       id: 123,
+      admin: true,
       email: "admin@email",
       password: Comeonin.Bcrypt.hashpwsalt("secretsauce")
     } |> Repo.insert!
@@ -17,7 +18,7 @@ defmodule TillTax.Web.UserControllerTest do
   setup %{conn: conn} = config do
     cond do
       config[:login] ->
-        user = insert_user()
+        user = insert_admin()
         signed_conn = Guardian.Plug.api_sign_in(conn, user)
         {:ok, conn: put_req_header(signed_conn, "accept", "application/json")}
       true ->
@@ -29,7 +30,7 @@ defmodule TillTax.Web.UserControllerTest do
   test "lists all entries on index", %{conn: conn} do
     conn = get conn, user_path(conn, :index)
     assert json_response(conn, 200)["data"] == [%{
-      "attributes" => %{"email" => "admin@email"},
+      "attributes" => %{"admin" => true, "email" => "admin@email"},
       "id" => 123,
       "type" => "user"
     }]
@@ -45,7 +46,7 @@ defmodule TillTax.Web.UserControllerTest do
   test "returns current user on current", %{conn: conn} do
     conn = get conn, user_path(conn, :current)
     assert json_response(conn, 200)["data"] == %{
-      "attributes" => %{"email" => "admin@email"},
+      "attributes" => %{"admin" => true, "email" => "admin@email"},
       "id" => 123,
       "type" => "user"
     }
