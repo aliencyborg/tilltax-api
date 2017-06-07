@@ -11,8 +11,23 @@ defmodule TillTax.Web.ContactController do
     render(conn, "index.json", contacts: contacts)
   end
 
-  def create(conn, %{"contact" => contact_params}) do
-    with {:ok, %Contact{} = contact} <- Accounts.create_contact(contact_params) do
+  def create(conn, %{
+    "data" => %{
+      "type" => "contacts",
+      "attributes" => %{
+        "details" => details,
+        "email" => email,
+        "name" => name,
+        "phone" => phone
+      }
+    }
+  }) do
+    with {:ok, %Contact{} = contact} <- Accounts.create_contact(%{
+      "details": details,
+      "email": email,
+      "name": name,
+      "phone": phone
+    }) do
       conn
       |> put_status(:created)
       |> put_resp_header("location", contact_path(conn, :show, contact))

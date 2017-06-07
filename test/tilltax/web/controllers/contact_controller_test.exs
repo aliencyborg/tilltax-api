@@ -53,7 +53,11 @@ defmodule TillTax.Web.ContactControllerTest do
   end
 
   test "creates contact and renders contact when data is valid", %{conn: conn} do
-    conn = post conn, contact_path(conn, :create), contact: @create_attrs
+    conn = post conn, contact_path(conn, :create), data: %{
+     type: "contacts",
+     attributes: @create_attrs
+   }
+
     assert %{"id" => id} = json_response(conn, 201)["data"]
 
     conn = get conn, contact_path(conn, :show, id)
@@ -70,7 +74,10 @@ defmodule TillTax.Web.ContactControllerTest do
   end
 
   test "does not create contact and renders errors when data is invalid", %{conn: conn} do
-    conn = post conn, contact_path(conn, :create), contact: @invalid_attrs
+    conn = post conn, contact_path(conn, :create), data: %{
+     type: "contacts",
+     attributes: @invalid_attrs
+   }
     assert json_response(conn, 422)["errors"] != %{}
   end
 

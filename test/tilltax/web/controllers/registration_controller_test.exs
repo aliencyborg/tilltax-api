@@ -27,6 +27,8 @@ defmodule TillTax.Web.RegistrationControllerTest do
       }
     }
 
+    assert %{"id" => id} = json_response(conn, 201)["data"]
+
     assert json_response(conn, 201)["data"]["id"]
     assert Repo.get_by(User, %{email: @create_attrs["email"]})
   end
