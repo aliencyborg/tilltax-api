@@ -18,5 +18,9 @@ defmodule TillTax.Accounts.Contact do
     contact
     |> cast(attrs, [:details, :email, :name, :phone])
     |> validate_required([:details, :email, :name, :phone])
+    |> validate_format(:email, ~r/@/)
+    |> validate_length(:name, max: 100, min: 2)
+    |> validate_length(:email, max: 100)
+    |> unique_constraint(:email)
   end
 end
