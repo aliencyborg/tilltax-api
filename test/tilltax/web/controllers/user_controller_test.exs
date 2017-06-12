@@ -32,7 +32,7 @@ defmodule TillTax.Web.UserControllerTest do
     assert json_response(conn, 200)["data"] == [%{
       "attributes" => %{"admin" => true, "email" => "admin@email"},
       "id" => 123,
-      "type" => "user"
+      "type" => "users"
     }]
   end
 
@@ -48,7 +48,7 @@ defmodule TillTax.Web.UserControllerTest do
     assert json_response(conn, 200)["data"] == %{
       "attributes" => %{"admin" => true, "email" => "admin@email"},
       "id" => 123,
-      "type" => "user"
+      "type" => "users"
     }
   end
 

@@ -12,7 +12,7 @@ defmodule TillTax.Web.ContactView do
 
   def render("contact.json", %{contact: contact}) do
     %{
-      type: "contact",
+      type: "contacts",
       id: contact.id,
       attributes: %{
         name: contact.name,

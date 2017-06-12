@@ -1,3 +1,5 @@
+require IEx
+
 defmodule TillTax.Web.ContactController do
   use TillTax.Web, :controller
 
@@ -15,13 +17,15 @@ defmodule TillTax.Web.ContactController do
     "data" => %{
       "type" => "contacts",
       "attributes" => %{
-        "details" => details,
+        "details" => detailsString,
         "email" => email,
         "name" => name,
         "phone" => phone
       }
     }
   }) do
+    details = Poison.Parser.parse!(detailsString || "{}")
+
     with {:ok, %Contact{} = contact} <- Accounts.create_contact(%{
       "details": details,
       "email": email,
@@ -40,10 +44,27 @@ defmodule TillTax.Web.ContactController do
     render(conn, "show.json", contact: contact)
   end
 
-  def update(conn, %{"id" => id, "contact" => contact_params}) do
+  def update(conn, %{
+    "id" => id,
+    "data" => %{
+      "type" => "contacts",
+      "attributes" => %{
+        "details" => detailsString,
+        "email" => email,
+        "name" => name,
+        "phone" => phone
+      }
+    }
+  }) do
+    details = Poison.Parser.parse!(detailsString || "{}")
     contact = Accounts.get_contact!(id)
 
-    with {:ok, %Contact{} = contact} <- Accounts.update_contact(contact, contact_params) do
+    with {:ok, %Contact{} = contact} <- Accounts.update_contact(contact, %{
+      "details": details,
+      "email": email,
+      "name": name,
+      "phone": phone
+    }) do
       render(conn, "show.json", contact: contact)
     end
   end

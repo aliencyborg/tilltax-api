@@ -19,7 +19,7 @@ defmodule TillTax.Web.RegistrationControllerTest do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
-  test "creates user and renders user when data is valid", %{conn: conn} do
+  test "creates user and renders user when data are valid", %{conn: conn} do
     conn = post conn, registration_path(conn, :create), %{
       data: %{
         type: "users",
@@ -29,11 +29,11 @@ defmodule TillTax.Web.RegistrationControllerTest do
 
     assert %{"id" => id} = json_response(conn, 201)["data"]
 
-    assert json_response(conn, 201)["data"]["id"]
+    assert json_response(conn, 201)["data"]["id"] == id
     assert Repo.get_by(User, %{email: @create_attrs["email"]})
   end
 
-  test "does not create user and renders errors when data is invalid", %{conn: conn} do
+  test "does not create user and renders errors when data are invalid", %{conn: conn} do
     conn = post conn, registration_path(conn, :create), %{
       data: %{
         type: "users",

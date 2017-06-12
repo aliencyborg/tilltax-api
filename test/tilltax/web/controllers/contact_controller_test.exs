@@ -1,3 +1,5 @@
+require IEx
+
 defmodule TillTax.Web.ContactControllerTest do
   use TillTax.Web.ConnCase
 
@@ -17,14 +19,26 @@ defmodule TillTax.Web.ContactControllerTest do
     Repo.get(User, 123)
   end
 
+  createDetails = Poison.encode!(%{
+    filingStatus: "individual",
+    filingRegion: "MN",
+    filingYears: [2016]
+  })
+
+  updateDetails = Poison.encode!(%{
+    filingStatus: "business",
+    filingRegion: "DC",
+    filingYears: [2015,2016]
+  })
+
   @create_attrs %{
-    details: %{},
+    details: createDetails,
     email: "some email",
     name: "some name",
     phone: "some phone"
   }
   @update_attrs %{
-    details: %{},
+    details: updateDetails,
     email: "some updated email",
     name: "some updated name",
     phone: "some updated phone"
@@ -37,7 +51,16 @@ defmodule TillTax.Web.ContactControllerTest do
   }
 
   def fixture(:contact) do
-    {:ok, contact} = Accounts.create_contact(@create_attrs)
+    {:ok, contact} = Accounts.create_contact(%{
+      email: "fixture email",
+      name: "fixture name",
+      phone: "fixture phone",
+      details: %{
+        filingStatus: "individual",
+        filingRegion: "MN",
+        filingYears: [2016]
+      }
+    })
     contact
   end
 
@@ -52,7 +75,8 @@ defmodule TillTax.Web.ContactControllerTest do
     end
   end
 
-  test "creates contact and renders contact when data is valid", %{conn: conn} do
+  test "creates contact and renders contact when data are valid",
+  %{conn: conn} do
     conn = post conn, contact_path(conn, :create), data: %{
      type: "contacts",
      attributes: @create_attrs
@@ -63,17 +87,22 @@ defmodule TillTax.Web.ContactControllerTest do
     conn = get conn, contact_path(conn, :show, id)
     assert json_response(conn, 200)["data"] == %{
       "attributes" => %{
-        "details" => %{},
+        "details" => %{
+          "filingStatus" => "individual",
+          "filingRegion" => "MN",
+          "filingYears" => [2016]
+        },
         "email" => "some email",
         "name" => "some name",
         "phone" => "some phone"
       },
       "id" => id,
-      "type" => "contact"
+      "type" => "contacts"
     }
   end
 
-  test "does not create contact and renders errors when data is invalid", %{conn: conn} do
+  test "does not create contact and renders errors when data are invalid",
+  %{conn: conn} do
     conn = post conn, contact_path(conn, :create), data: %{
      type: "contacts",
      attributes: @invalid_attrs
@@ -88,28 +117,40 @@ defmodule TillTax.Web.ContactControllerTest do
   end
 
   @tag :login
-  test "updates chosen contact and renders contact when data is valid", %{conn: conn} do
+  test "updates chosen contact and renders contact when data are valid",
+  %{conn: conn} do
     %Contact{id: id} = contact = fixture(:contact)
-    conn = put conn, contact_path(conn, :update, contact), contact: @update_attrs
+    conn = put conn, contact_path(conn, :update, contact), data: %{
+      type: "contacts",
+      attributes: @update_attrs
+    }
     assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
     conn = get conn, contact_path(conn, :show, id)
     assert json_response(conn, 200)["data"] == %{
       "attributes" => %{
-        "details" => %{},
+        "details" => %{
+          "filingStatus" => "business",
+          "filingRegion" => "DC",
+          "filingYears" => [2015,2016]
+        },
         "email" => "some updated email",
         "name" => "some updated name",
         "phone" => "some updated phone"
       },
       "id" => id,
-      "type" => "contact"
+      "type" => "contacts"
     }
   end
 
   @tag :login
-  test "does not update chosen contact and renders errors when data is invalid", %{conn: conn} do
+  test "does not update chosen contact and renders errors when data are invalid",
+  %{conn: conn} do
     contact = fixture(:contact)
-    conn = put conn, contact_path(conn, :update, contact), contact: @invalid_attrs
+    conn = put conn, contact_path(conn, :update, contact), data: %{
+      type: "contacts",
+      attributes: @invalid_attrs
+    }
     assert json_response(conn, 422)["errors"] != %{}
   end
 
