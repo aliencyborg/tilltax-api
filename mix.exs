@@ -17,7 +17,7 @@ defmodule TillTax.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {TillTax.Application, []},
-     extra_applications: [:logger, :runtime_tools, :comeonin]]
+     extra_applications: [:logger, :runtime_tools, :comeonin, :bamboo]]
   end
 
   # Specifies which paths to compile per environment.
@@ -38,7 +38,8 @@ defmodule TillTax.Mixfile do
       {:cors_plug, "~> 1.2"},
       {:guardian, "~> 0.14"},
       {:comeonin, "~> 3.0"},
-      {:ja_serializer, "~> 0.12.0"}
+      {:ja_serializer, "~> 0.12.0"},
+      {:bamboo, "~> 0.8.0"}
     ]
   end
 

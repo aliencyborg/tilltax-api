@@ -18,5 +18,9 @@ config :tilltax, TillTax.Repo,
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
 
+# Configure bamboo mailer
+config :tilltax, TillTax.Mailer,
+  adapter: Bamboo.TestAdapter
+
 # Reduce the BCrypt rounds for speed
 config :comeonin, :bcrypt_log_rounds, 4
