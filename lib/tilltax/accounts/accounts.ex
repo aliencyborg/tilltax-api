@@ -7,6 +7,7 @@ defmodule TillTax.Accounts do
 
   alias TillTax.Repo
   alias TillTax.Accounts.User
+  alias TillTax.Accounts.Email
 
   @doc """
   Returns the list of users.
@@ -146,9 +147,12 @@ defmodule TillTax.Accounts do
 
   """
   def create_contact(attrs \\ %{}) do
-    %Contact{}
+    {:ok, contact} = %Contact{}
     |> Contact.changeset(attrs)
     |> Repo.insert()
+
+    Email.welcome_email(contact)
+    contact
   end
 
   @doc """
