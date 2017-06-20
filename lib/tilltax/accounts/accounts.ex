@@ -147,12 +147,14 @@ defmodule TillTax.Accounts do
 
   """
   def create_contact(attrs \\ %{}) do
-    {:ok, contact} = %Contact{}
+    with {:ok, contact} = %Contact{}
     |> Contact.changeset(attrs)
-    |> Repo.insert()
+    |> Repo.insert() do
 
-    Email.welcome_email(contact)
-    contact
+      Email.welcome_email(contact)
+      {:ok, contact}
+
+    end
   end
 
   @doc """
