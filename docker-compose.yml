@@ -1,10 +1,32 @@
-version: '2'
+version: '3'
+
 services:
   db:
     container_name: tilltax-db
     image: postgres:9.6
     ports:
-      - "5432:5432"
+      - '5432:5432'
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+    networks:
+      - 'tilltax'
+    volumes:
+      - 'postgres:/var/lib/postgresql/data'
+
+  phoenix:
+    build: .
+    container_name: tilltax-phx
+    depends_on:
+      - 'postgres'
+    env_file:
+      - '.env'
+    network:
+      - 'tilltax'
+    ports:
+      - '4000:4000'
+    volumes:
+      - '.:/code'
+
+networks:
+  tilltax:

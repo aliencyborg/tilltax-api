@@ -1,12 +1,12 @@
 FROM elixir:1.5
 
-EXPOSE 80
+EXPOSE 4000
 
 WORKDIR /code
 VOLUME /code
 
-ENV MIX_ENV prod
-ENV PORT 80
+ENV MIX_ENV development
+ENV PORT 4000
 
 COPY . .
 
