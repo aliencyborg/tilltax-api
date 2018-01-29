@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  db:
+  postgres:
     container_name: tilltax-db
     image: postgres:9.6
     ports:
@@ -15,13 +15,15 @@ services:
       - 'postgres:/var/lib/postgresql/data'
 
   phoenix:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.development
     container_name: tilltax-phx
     depends_on:
       - 'postgres'
     env_file:
       - '.env'
-    network:
+    networks:
       - 'tilltax'
     ports:
       - '4000:4000'
@@ -30,3 +32,6 @@ services:
 
 networks:
   tilltax:
+
+volumes:
+  postgres:

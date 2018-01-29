@@ -5,7 +5,7 @@ EXPOSE 4000
 WORKDIR /code
 VOLUME /code
 
-ENV MIX_ENV development
+ENV MIX_ENV dev
 ENV PORT 4000
 
 COPY . .
@@ -21,4 +21,5 @@ RUN \
 
 LABEL maintainer="Benjamin Rosas <ben.rosas@gmx.us>"
 
-CMD mix do ecto.migrate, phx.server
+# CMD mix do deps.get, ecto.migrate, phx.server
+CMD mix do deps.get, phx.server

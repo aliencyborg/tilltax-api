@@ -43,5 +43,5 @@ config :tilltax, TillTax.Repo,
   username: "postgres",
   password: "postgres",
   database: "tilltax_dev",
-  hostname: "localhost",
+  hostname: "postgres",
   pool_size: 10

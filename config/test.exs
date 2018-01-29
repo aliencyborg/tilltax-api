@@ -15,7 +15,7 @@ config :tilltax, TillTax.Repo,
   username: "postgres",
   password: "postgres",
   database: "tilltax_test",
-  hostname: "localhost",
+  hostname: "postgres",
   pool: Ecto.Adapters.SQL.Sandbox
 
 # Configure bamboo mailer
