@@ -1,0 +1,70 @@
+---
+- name: tilltax-api deploy
+  hosts: west
+  remote_user: hank
+  vars:
+    branch: prod
+    homedir: "/home/{{ user }}"
+    org: aliencyborg
+    repo: tilltax-api
+    user: hank
+    workdir: "{{ homedir }}/code/src/github.com/{{ org }}/{{ repo }}"
+
+  tasks:
+    - name: ensure workdir parent dir is present
+      file:
+        path: "{{ homedir }}/code/src/github.com/{{ org }}"
+        state: directory
+
+    - name: clone or update repo
+      git:
+        accept_hostkey: yes
+        dest: "{{ workdir }}"
+        key_file: "{{ homedir }}/.ssh/id_rsa"
+        repo: "git@github.com:{{ org }}/{{ repo }}.git"
+        update: yes
+        version: "{{ branch }}"
+
+    - name: copy env file to remote folder
+      copy:
+        src: prod.env
+        dest: "{{ workdir }}/prod.env"
+
+    - name: ensure postgres data container
+      docker_container:
+        image: postgres:9.6
+        name: tilltax-db-data
+        state: stopped
+
+    - name: run postgres db container
+      docker_container:
+        env_file: "{{ workdir }}/prod.env"
+        image: postgres:9.6
+        name: tilltax-db
+        restart_policy: always
+        volumes_from:
+          - tilltax-db-data
+
+    - name: build docker api image
+      docker_image:
+        force_source: yes
+        name: tilltax-api
+        source: build
+        build:
+          path: "{{ workdir }}"
+          pull: no
+
+    - name: run api container
+      docker_container:
+        env_file: "{{ workdir }}/prod.env"
+        image: tilltax-api
+        name: tilltax-api
+        restart_policy: always
+        env:
+          LETSENCRYPT_HOST: "api.tilltax.com"
+          VIRTUAL_HOST: "api.tilltax.com"
+        links:
+          - "tilltax-db:db"
+
+    - name: run rails db:migrate
+      command: docker exec tilltax-api bin/rails db:migrate
